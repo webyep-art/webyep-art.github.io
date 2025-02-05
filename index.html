@@ -201,8 +201,8 @@
         });
 
         // Add Grid Helper
-        const gridSize = 100;
-        const gridDivisions = 20;
+        const gridSize = 5000;
+        const gridDivisions = 100;
         const gridHelper = new THREE.GridHelper(gridSize, gridDivisions, 0x888888, 0x444444);
         gridHelper.position.y = -0.01; // Slightly below the origin to avoid z-fighting
         scene.add(gridHelper);
