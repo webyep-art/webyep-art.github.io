@@ -3,26 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3D Editor with GLB Loader and Lighting</title>
+    <title>Webyep - Designer</title>
+    <!-- Add favicon -->
+    <link rel="icon" type="image/png" href="lg.png">
+    
     <style>
+        
         @import url('https://fonts.googleapis.com/css2?family=Kosugi&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
 
 
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
             font-family: "Roboto", serif;
-  font-optical-sizing: auto;
-  font-weight: <weight>;
-  font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+            font-optical-sizing: auto;
+            font-weight: <weight>;
+            font-style: normal;
+            font-variation-settings: "wdth" 100;
         }
 
         html, body {
             height: 100%;
             overflow: hidden;
+        }
+
+        /* Logo styling */
+        #logo {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            z-index: 1000;
+            width: 38px; /* Adjust size as needed */
+            height: 38px;
         }
 
         #load-button, #delete-button, #render-button {
@@ -36,10 +50,10 @@
             border-radius: 5px;
             cursor: pointer;
         }
-        #load-button { left: 10px; }
-        #delete-button { left: 100px; background-color: #dc3545; }
+        #load-button { left: 70px; } /* Adjust position to avoid overlapping with logo */
+        #delete-button { left: 160px; background-color: #dc3545; }
         #delete-button:hover { background-color: #b52b3a; }
-        #render-button { left: 170px; background-color: #28a745; }
+        #render-button { left: 230px; background-color: #28a745; }
         #render-button:hover { background-color: #218838; }
         
         #confirm-box {
@@ -95,8 +109,7 @@
             font-size: 20px;
         }
 
-
-         #changelog-modal h1 {
+        #changelog-modal h1 {
             margin-top: 0;
             bottom: 20px;
             font-size: 15px;
@@ -120,9 +133,48 @@
         #changelog-modal button:hover {
             background-color: #0056b3;
         }
+
+        #context-menu {
+    display: none;
+    position: absolute;
+    background-color: rgb(41, 41, 41);
+    border: 1px solid rgb(41, 41, 41);
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
+}
+
+#context-menu ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    background-color: rgb(41, 41, 41);
+    border: 1px solid rgb(41, 41, 41);
+    color: aqua;
+}
+
+#context-menu li {
+    padding: 8px 12px;
+    cursor: pointer;
+    
+}
+
+#context-menu li:hover {
+    background-color: #0c0c0c;
+}
     </style>
 </head>
 <body>
+    <!-- Add logo -->
+    <a href="https://github.com/webyep-art/webyep-art.github.io">
+        <img id="logo" src="logo.png" alt="Logo">
+    </a>
+    <div id="context-menu" style="display: none; position: absolute; background-color: rgb(0, 0, 0); border: 1px solid #2e3135; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); z-index: 1000;">
+        <ul style="list-style: none; margin: 0; padding: 0;">
+            <li id="delete-context" style="padding: 8px 12px; cursor: pointer;">Delete</li>
+            <li id="duplicate-context" style="padding: 8px 12px; cursor: pointer;">Duplicate</li>
+            <li id="select-object" style="padding: 8px 12px; cursor: pointer; display: none;">Select object first</li>
+        </ul>
+    </div>
     <button id="load-button">Load GLB</button>
     <button id="delete-button">Delete</button>
     <button id="render-button">Export</button>
@@ -134,30 +186,37 @@
     </div>
     <div id="changelog-modal">
         <h2>Alpha 0.0.2</h2>
-
         <ul>
             <li>The grid size has been increased.</li>
         </ul>
-
-            <h1>Dev notes</h1>
-        <ul><li>To improve the project, I plan to add advertising/donations in future versions. Don’t be afraid, most likely it will be one banner on the project creation page (sorry for the spoiler)</li></ul>
+        <h1>Dev notes</h1>
+        <ul>
+            <li>To improve the project, I plan to add advertising/donations in future versions. Don’t be afraid, most likely it will be one banner on the project creation page (sorry for the spoiler)</li>
+        </ul>
         <button id="close-changelog">Close</button>
     </div>
-
 
     <div id="watermark">
         Webyep Designer. Alpha 0.0.2. Dev's discord: webyep.
         THE VERSION IS UNSTABLE AND NOT WORKING CORRECTLY. THE CODE REQUIRES IMPROVEMENTS AND REFACTORING
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/TransformControls.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/postprocessing/EffectComposer.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/postprocessing/RenderPass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/postprocessing/OutlinePass.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/shaders/CopyShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/shaders/FXAAShader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/postprocessing/ShaderPass.js"></script>
+
     <script>
-         // Показываем модальное окно с change log при загрузке страницы
-         document.addEventListener('DOMContentLoaded', () => {
+        // Показываем модальное окно с change log при загрузке страницы
+        document.addEventListener('DOMContentLoaded', () => {
             const changelogModal = document.getElementById('changelog-modal');
             changelogModal.style.display = 'block';
 
@@ -171,7 +230,8 @@
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.body.appendChild(renderer.domElement);
         renderer.setClearColor(0x1a1a1a, 1);
-
+        // Добавляем OutlinePass для обводки выделенного объекта
+      
         // Ensure the body and canvas fill the entire screen
         document.body.style.margin = '0';
         document.body.style.overflow = 'hidden';
@@ -179,7 +239,23 @@
         const scene = new THREE.Scene();
         const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
         camera.position.set(0, 20, 100);
-        
+        const composer = new THREE.EffectComposer(renderer);
+        const renderPass = new THREE.RenderPass(scene, camera);
+        composer.addPass(renderPass);
+
+        const outlinePass = new THREE.OutlinePass(
+            new THREE.Vector2(window.innerWidth, window.innerHeight),
+            scene,
+            camera
+        );
+        outlinePass.edgeStrength = 3.0; // Сила обводки
+        outlinePass.edgeGlow = 0.5;     // Свечение обводки
+        outlinePass.edgeThickness = 1.0; // Толщина обводки
+        outlinePass.pulsePeriod = 2;    // Период пульсации (если нужно)
+        outlinePass.visibleEdgeColor.set(0x00ff00); // Цвет обводки (зеленый)
+        outlinePass.hiddenEdgeColor.set(0x000000);  // Цвет скрытых краев
+
+composer.addPass(outlinePass);
         const orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
         
         const transformControls = new THREE.TransformControls(camera, renderer.domElement);
@@ -287,6 +363,9 @@
                 if (object.userData.selectable) {
                     selectedObject = object;
                     transformControls.attach(selectedObject);
+
+                    // Обновляем обводку для выделенного объекта
+                    outlinePass.selectedObjects = [selectedObject];
                     break;
                 }
             }
@@ -315,59 +394,142 @@
             }
         });
 
-     // Render button functionality
-     document.getElementById('render-button').addEventListener('click', () => {
-    const zip = new JSZip();
-    const code = [];
+        // Render button functionality
+        document.getElementById('render-button').addEventListener('click', () => {
+            const zip = new JSZip();
+            const code = [];
 
-    loadedModels.forEach((model, index) => {
-        const fileName = model.userData.fileName || `model_${index + 1}`;
-        const glbName = `${fileName}_glb`;
+            loadedModels.forEach((model, index) => {
+                const fileName = model.userData.fileName || `model_${index + 1}`;
+                const glbName = `${fileName}_glb`;
 
-        // Compute bounding box dimensions
-        const box = new THREE.Box3().setFromObject(model);
-        const size = box.getSize(new THREE.Vector3());
+                // Compute bounding box dimensions
+                const box = new THREE.Box3().setFromObject(model);
+                const size = box.getSize(new THREE.Vector3());
 
-        // Get the width, height, and depth
-        const width = size.x;
-        const height = size.y;
-        const depth = size.z;
+                // Get the width, height, and depth
+                const width = size.x;
+                const height = size.y;
+                const depth = size.z;
 
-        // Add GLB file to ZIP
-        const glbFile = new Blob([model.userData.glbData], { type: 'model/gltf-binary' });
-        zip.file(`${fileName}.glb`, glbFile);
+                // Add GLB file to ZIP
+                const glbFile = new Blob([model.userData.glbData], { type: 'model/gltf-binary' });
+                zip.file(`${fileName}.glb`, glbFile);
 
-        // Generate JS code using dimensions (width, height, depth)
-        code.push(`var ${glbName} = runtimeScene.createObject('${fileName}_glb');`);
-        code.push(`${glbName}.get3DRendererObject().rotation.x = ${model.rotation.x};`);
-        code.push(`${glbName}.get3DRendererObject().rotation.y = ${model.rotation.z};`);
-        code.push(`${glbName}.get3DRendererObject().rotation.z = ${model.rotation.y};`);
-        code.push(`${glbName}.get3DRendererObject().position.x = ${model.position.x};`);
-        code.push(`${glbName}.get3DRendererObject().position.y = ${model.position.y};`);
-        code.push(`${glbName}.get3DRendererObject().position.z = ${model.position.z};`);
+                // Generate JS code using dimensions (width, height, depth)
+                code.push(`var ${glbName} = runtimeScene.createObject('${fileName}_glb');`);
+                code.push(`${glbName}.get3DRendererObject().rotation.x = ${model.rotation.x};`);
+                code.push(`${glbName}.get3DRendererObject().rotation.y = ${model.rotation.z};`);
+                code.push(`${glbName}.get3DRendererObject().rotation.z = ${model.rotation.y};`);
+                code.push(`${glbName}.get3DRendererObject().position.x = ${model.position.x};`);
+                code.push(`${glbName}.get3DRendererObject().position.y = ${model.position.y};`);
+                code.push(`${glbName}.get3DRendererObject().position.z = ${model.position.z};`);
 
-        // Use the actual width, height, and depth (instead of scale)
-        code.push(`${glbName}.get3DRendererObject().scale.x = ${width} * 2;`);
-        code.push(`${glbName}.get3DRendererObject().scale.y = ${height} * 2;`);
-        code.push(`${glbName}.get3DRendererObject().scale.z = ${depth} * 2;`);
-        code.push('');
-    });
+                // Use the actual width, height, and depth (instead of scale)
+                code.push(`${glbName}.get3DRendererObject().scale.x = ${width} * 2;`);
+                code.push(`${glbName}.get3DRendererObject().scale.y = ${height} * 2;`);
+                code.push(`${glbName}.get3DRendererObject().scale.z = ${depth} * 2;`);
+                code.push('');
+            });
 
-    // Add JS code file to ZIP
-    zip.file('scene.js', code.join('\n'));
+            // Add JS code file to ZIP
+            zip.file('scene.js', code.join('\n'));
 
-    // Generate and download the ZIP file
-    zip.generateAsync({ type: 'blob' }).then((content) => {
-        saveAs(content, 'scene.zip');
-    });
+            // Generate and download the ZIP file
+            zip.generateAsync({ type: 'blob' }).then((content) => {
+                saveAs(content, 'scene.zip');
+            });
+        });
+        // Элемент контекстного меню
+const contextMenu = document.getElementById('context-menu');
+const deleteContext = document.getElementById('delete-context');
+const duplicateContext = document.getElementById('duplicate-context');
+const selectObjectContext = document.getElementById('select-object');
+
+// Переменная для хранения выбранного объекта
+let contextMenuObject = null;
+
+// Обработчик правого клика
+window.addEventListener('contextmenu', (event) => {
+    event.preventDefault(); // Отключаем стандартное контекстное меню браузера
+
+    const mouse = new THREE.Vector2();
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+
+    const raycaster = new THREE.Raycaster();
+    raycaster.setFromCamera(mouse, camera);
+    const intersects = raycaster.intersectObjects(scene.children, true);
+
+    // Проверяем, есть ли пересечение с объектом
+    let object = null;
+    for (let intersect of intersects) {
+        let obj = intersect.object;
+        while (obj.parent && !obj.userData.selectable) {
+            obj = obj.parent;
+        }
+        if (obj.userData.selectable) {
+            object = obj;
+            break;
+        }
+    }
+
+    if (object) {
+        // Если объект выбран, показываем меню с пунктами Delete и Duplicate
+        contextMenuObject = object;
+        deleteContext.style.display = 'block';
+        duplicateContext.style.display = 'block';
+        selectObjectContext.style.display = 'none';
+    } else {
+        // Если объект не выбран, показываем сообщение "Select object first"
+        contextMenuObject = null;
+        deleteContext.style.display = 'none';
+        duplicateContext.style.display = 'none';
+        selectObjectContext.style.display = 'block';
+    }
+
+    // Позиционируем контекстное меню
+    contextMenu.style.display = 'block';
+    contextMenu.style.left = `${event.clientX}px`;
+    contextMenu.style.top = `${event.clientY}px`;
 });
 
+// Закрытие контекстного меню при клике вне его
+window.addEventListener('click', () => {
+    contextMenu.style.display = 'none';
+});
 
-        function animate() {
-            requestAnimationFrame(animate);
-            orbitControls.update();
-            renderer.render(scene, camera);
+// Обработка пункта Delete
+deleteContext.addEventListener('click', () => {
+    if (contextMenuObject) {
+        // Если удаляемый объект прикреплен к TransformControls, отключаем их
+        if (transformControls.object === contextMenuObject) {
+            transformControls.detach();
         }
+        scene.remove(contextMenuObject);
+        contextMenuObject = null;
+        contextMenu.style.display = 'none';
+
+        // Сбрасываем обводку
+        outlinePass.selectedObjects = [];
+    }
+});
+
+// Обработка пункта Duplicate
+duplicateContext.addEventListener('click', () => {
+    if (contextMenuObject) {
+        const clone = contextMenuObject.clone();
+        clone.position.x += contextMenuObject.scale.x * 2; // Сдвигаем копию на ширину объекта
+        scene.add(clone);
+        loadedModels.push(clone);
+        contextMenu.style.display = 'none';
+    }
+});
+function animate() {
+    requestAnimationFrame(animate);
+    orbitControls.update();
+    composer.render(); // Используем composer вместо renderer
+}
 
         animate();
     </script>
