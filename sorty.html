@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sorty | webyep portfolio</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: block;
+            position: absolute;
+            background-color: #000;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border: 1px solid #333;
+            left: 0;
+            top: calc(100% + 10px);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: 
+                opacity 0.25s ease,
+                transform 0.25s ease,
+                visibility 0.25s;
+            border-radius: 4px;
+            padding: 5px 0;
+        }
+        
+        .dropdown-content::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+        }
+        
+        .dropdown-content a {
+            color: white;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s;
+            border-radius: 4px;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #222;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        body {
+            background-color: #000;
+            color: white;
+            font-family: "JetBrains Mono", monospace;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #header {
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            border-bottom: 1px solid #333;
+        }
+        
+        .text_button {
+            color: white;
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            padding: 5px 0;
+            transition: color 0.2s ease;
+        }
+
+        .text_button:hover {
+            color: #ccc;
+        }
+        
+        .separator {
+            margin: 0 10px;
+            color: #333;
+            user-select: none;
+        }
+        
+        #main-content {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .project-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .success-banner {
+            background-color: #003322;
+            border-left: 4px solid #00cc88;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        /* Card styles */
+        .card {
+            background-color: #111;
+            border: 1px solid #333;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .card-header:hover {
+            background-color: #222;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .card-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            border-top: 1px solid transparent;
+        }
+        
+        .card.active .card-content {
+            padding: 20px;
+            max-height: 2000px;
+            border-top: 1px solid #333;
+        }
+        
+        /* Code highlighting */
+        .code-block {
+            background-color: #000;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+        }
+        
+        .keyword {
+            color: #569cd6;
+        }
+        
+        .type {
+            color: #4ec9b0;
+        }
+        
+        .string {
+            color: #ce9178;
+        }
+        
+        .number {
+            color: #b5cea8;
+        }
+        
+        .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #fff;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
+        }
+        
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .gallery-item {
+            border: 1px solid #333;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .gallery-caption {
+            padding: 10px;
+            background-color: #111;
+            font-size: 0.9rem;
+            text-align: center;
+        }
+        
+        .github-badge {
+            display: inline-block;
+            background-color: #333;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            margin-top: 10px;
+            margin-bottom: 10px;
+            transition: background-color 0.2s;
+        }
+        
+        .github-badge:hover {
+            background-color: #444;
+        }
+        
+        .feature-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .feature-item {
+            background-color: #111;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 15px;
+        }
+        
+        .feature-item h4 {
+            margin-top: 0;
+            color: #00cc88;
+        }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <a href="index.html" class="text_button">webyep</a>
+        <span class="separator">|</span>
+        <div class="dropdown">
+            <a href="#" class="text_button">projects</a>
+            <div class="dropdown-content">
+                <a href="luna.html">Luna</a>
+                <a href="pygame3d.html">Pygame 3D</a>
+                <a href="sorty.html">Sorty</a>
+            </div>
+        </div>
+    </div>
+    
+    <div id="main-content">
+        <h1 class="project-title">Sorty</h1>
+        
+        <div class="success-banner">
+            <strong>Lightweight File Organizer</strong> - Keep your downloads folder tidy with this system tray utility.
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Overview</h2>
+            <p>A minimalistic application that lives in your system tray and automatically organizes files in your downloads folder with a single click.</p>
+            
+            <a href="https://github.com/nosfty/Sorty" class="github-badge" target="_blank">
+                View on GitHub
+            </a>
+           
+        
+        <div class="section">
+            <h2 class="section-title">Features</h2>
+            
+            <div class="feature-list">
+                <div class="feature-item">
+                    <h4>Smart Sorting</h4>
+                    <p>Automatically categorizes files into folders: Images, Audio, Archives, Torrents, and more.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>System Tray Integration</h4>
+                    <p>Runs quietly in the background with a simple right-click menu.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>Customizable</h4>
+                    <p>Change the target directory or add your own file categories.</p>
+                </div>
+                <div class="feature-item">
+                    <h4>Notifications</h4>
+                    <p>Get feedback after each sorting operation.</p>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">How It Works</h2>
+            
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Simple Setup</h3>
+                    <span>+</span>
+                </div>
+                <div class="card-content">
+                    <ol>
+                        <li>Download and install the application</li>
+                        <li>It will appear in your system tray</li>
+                        <li>Right-click to access the menu</li>
+                        <li>Click "Sort!" to organize your files</li>
+                    </ol>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Supported File Types</h3>
+                    <span>+</span>
+                </div>
+                <div class="card-content">
+                    <div class="feature-list">
+                        <div class="feature-item">
+                            <h4>Images</h4>
+                            <p>JPG, PNG, GIF, WEBP</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>Audio</h4>
+                            <p>MP3, WAV, FLAC</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>Archives</h4>
+                            <p>ZIP, RAR, 7Z</p>
+                        </div>
+                        <div class="feature-item">
+                            <h4>Documents</h4>
+                            <p>PDF, DOCX, XLSX</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Get Started</h2>
+            <p>Download Sorty today and say goodbye to messy downloads folders!</p>
+            <a href="https://github.com/nosfty/Sorty/releases" class="github-badge" target="_blank">
+                Download Latest Release
+            </a>
+        </div>
+    </div>
+
+    <script>
+        function toggleCard(header) {
+            const card = header.parentElement;
+            card.classList.toggle('active');
+            
+            const indicator = header.querySelector('span');
+            if (card.classList.contains('active')) {
+                indicator.textContent = '-';
+            } else {
+                indicator.textContent = '+';
+            }
+        }
+        
+        // Open first card by default
+        document.addEventListener('DOMContentLoaded', () => {
+            const firstCard = document.querySelector('.card');
+            if (firstCard) {
+                firstCard.classList.add('active');
+                firstCard.querySelector('.card-header span').textContent = '-';
+            }
+        });
+    </script>
+</body>
+</html>
