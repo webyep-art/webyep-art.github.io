@@ -3,41 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Luna Language | webyep portfolio</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
-
-        body {
-            background-color: #000;
-            color: white;
-            font-family: "JetBrains Mono", monospace;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-        }
-        
-        #header {
-            padding: 20px;
-            position: relative;
-            z-index: 10;
-        }
-        
-        .text_button {
-            color: white;
-            text-decoration: none;
-            position: relative;
-            display: inline-block;
-            padding: 5px 0;
-            transition: color 0.2s ease;
-        }
-
-        .text_button:hover {
-            color: #ccc;
-        }
         
         .dropdown {
             position: relative;
@@ -93,25 +61,156 @@
             visibility: visible;
             transform: translateY(0);
         }
+        body {
+            background-color: #000;
+            color: white;
+            font-family: "JetBrains Mono", monospace;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #header {
+            padding: 20px;
+            position: sticky;
+            top: 0;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 100;
+            border-bottom: 1px solid #333;
+        }
+        
+        .text_button {
+            color: white;
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            padding: 5px 0;
+            transition: color 0.2s ease;
+        }
 
+        .text_button:hover {
+            color: #ccc;
+        }
+        
         .separator {
             margin: 0 10px;
             color: #333;
             user-select: none;
         }
         
-        #canvas-container {
-            position: absolute;
-            top: 0;
-            left: 0;
+        #main-content {
+            padding: 40px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
             width: 100%;
-            height: 100%;
-            z-index: 1;
+            box-sizing: border-box;
+        }
+        
+        .project-title {
+            font-size: 2.5rem;
+            margin-bottom: 30px;
+            color: #fff;
+        }
+        
+        .warning-banner {
+            background-color: #332200;
+            border-left: 4px solid #ff9900;
+            padding: 15px;
+            margin-bottom: 30px;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        /* Card styles */
+        .card {
+            background-color: #111;
+            border: 1px solid #333;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+        
+        .card-header {
+            padding: 15px 20px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: background-color 0.2s;
+        }
+        
+        .card-header:hover {
+            background-color: #222;
+        }
+        
+        .card-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+        }
+        
+        .card-content {
+            padding: 0 20px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            border-top: 1px solid transparent;
+        }
+        
+        .card.active .card-content {
+            padding: 20px;
+            max-height: 2000px;
+            border-top: 1px solid #333;
+        }
+        
+        /* Code highlighting */
+        .code-block {
+            background-color: #000;
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+        }
+        
+        .keyword {
+            color: #569cd6;
+        }
+        
+        .type {
+            color: #4ec9b0;
+        }
+        
+        .string {
+            color: #ce9178;
+        }
+        
+        .number {
+            color: #b5cea8;
+        }
+        
+        .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+        
+        .section {
+            margin-bottom: 40px;
+        }
+        
+        .section-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #fff;
+            border-bottom: 1px solid #333;
+            padding-bottom: 10px;
         }
     </style>
 </head>
 <body>
-     <div id="header">
+    <div id="header">
         <a href="index.html" class="text_button">webyep</a>
         <span class="separator">|</span>
         <div class="dropdown">
@@ -124,99 +223,155 @@
     </div>
     
     
-    <div id="canvas-container"></div>
+    <div id="main-content">
+        <h1 class="project-title">Luna Programming Language</h1>
+        
+        <div class="warning-banner">
+            <strong>WORK IN PROGRESS</strong> - Contains bugs and unfinished features.
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Overview</h2>
+            <p>Luna is a static-typed scripting language designed for simplicity and ease of use. It supports basic programming constructs, functions, arrays, and memory management.</p>
+            
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Key Features</h3>
+                    <span>+</span>
+                </div>
+                <div class="card-content">
+                    <ul>
+                        <li>Basic data types (int, float, bool, string)</li>
+                        <li>Arrays (int[], float[], bool[], string[])</li>
+                        <li>Pointers and memory management</li>
+                        <li>Functions</li>
+                        <li>Control flow (if/else, while loops)</li>
+                        <li>Standard library functions</li>
+                        <li>Error handling with stack traces</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Language Features</h2>
+            
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Data Types</h3>
+                    <span>+</span>
+                </div>
+                <div class="card-content">
+                    <h4>Primitive Types:</h4>
+                    <div class="code-block">
+                        <span class="keyword">int</span> x = <span class="number">42</span><br>
+                        <span class="keyword">float</span> pi = <span class="number">3.14</span><br>
+                        <span class="keyword">bool</span> flag = <span class="keyword">true</span><br>
+                        <span class="keyword">string</span> greeting = <span class="string">"Hello, Luna!"</span>
+                    </div>
+                    
+                    <h4>Composite Types:</h4>
+                    <div class="code-block">
+                        <span class="keyword">int</span>[] numbers = [<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>]<br>
+                        <span class="keyword">ptr</span>&lt;<span class="keyword">int</span>&gt; p = <span class="keyword">alloc</span>(<span class="keyword">int</span>, <span class="number">10</span>)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Control Structures</h3>
+                    <span>+</span>
+                </div>
+                <div class="card-content">
+                    <h4>If/Else:</h4>
+                    <div class="code-block">
+                        <span class="keyword">if</span> x &gt; <span class="number">10</span> {<br>
+                        &nbsp;&nbsp;<span class="comment">// do something</span><br>
+                        } <span class="keyword">else</span> {<br>
+                        &nbsp;&nbsp;<span class="comment">// do something else</span><br>
+                        }
+                    </div>
+                    
+                    <h4>While Loop:</h4>
+                    <div class="code-block">
+                        <span class="keyword">while</span> x &lt; <span class="number">100</span> {<br>
+                        &nbsp;&nbsp;x = x + <span class="number">1</span><br>
+                        }
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Functions</h3>
+                    <span>+</span>
+                </div>
+                <div class="card-content">
+                    <div class="code-block">
+                        <span class="keyword">func</span> add(<span class="keyword">int</span> a, <span class="keyword">int</span> b) -&gt; <span class="keyword">int</span> {<br>
+                        &nbsp;&nbsp;<span class="keyword">return</span> a + b<br>
+                        }<br><br>
+                        
+                        <span class="comment">// Function call</span><br>
+                        <span class="keyword">int</span> result = add(<span class="number">5</span>, <span class="number">7</span>)
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Memory Management</h3>
+                    <span>+</span>
+                </div>
+                <div class="card-content">
+                    <div class="code-block">
+                        <span class="comment">// Allocation</span><br>
+                        <span class="keyword">ptr</span>&lt;<span class="keyword">int</span>&gt; p = <span class="keyword">alloc</span>(<span class="keyword">int</span>, <span class="number">10</span>)<br><br>
+                        
+                        <span class="comment">// Deallocation</span><br>
+                        <span class="keyword">free</span>(p)
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="section">
+            <h2 class="section-title">Philosophy</h2>
+            <div class="card">
+                <div class="card-header" onclick="toggleCard(this)">
+                    <h3>Code Clarity</h3>
+                    <span>+</span>
+                </div>
+                <div class="card-content">
+                    <p>A good programmer only writes code they understand. While comments in code are valuable for documentation, they are not a substitute for writing clear, self-explanatory code.</p>
+                    <p>Luna's philosophy emphasizes writing code that is inherently understandable rather than relying heavily on comments.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script>
-        // Инициализация Three.js сцены
-        const container = document.getElementById('canvas-container');
-        const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-        
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        renderer.setClearColor(0x000000, 0);
-        container.appendChild(renderer.domElement);
-        
-        // Позиция камеры
-        camera.position.z = 30;
-        
-        // Создаем частицы
-        const particleCount = 2000;
-        const particles = new THREE.BufferGeometry();
-        const positions = new Float32Array(particleCount * 3);
-        const sizes = new Float32Array(particleCount);
-        
-        for (let i = 0; i < particleCount; i++) {
-            const i3 = i * 3;
-            positions[i3] = (Math.random() - 0.5) * 100;
-            positions[i3 + 1] = (Math.random() - 0.5) * 100;
-            positions[i3 + 2] = (Math.random() - 0.5) * 100;
+        function toggleCard(header) {
+            const card = header.parentElement;
+            card.classList.toggle('active');
             
-            sizes[i] = Math.random() * 0.5 + 0.5;
+            const indicator = header.querySelector('span');
+            if (card.classList.contains('active')) {
+                indicator.textContent = '-';
+            } else {
+                indicator.textContent = '+';
+            }
         }
         
-        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-        particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
-        
-        // Материал частиц
-        const particleMaterial = new THREE.PointsMaterial({
-            color: 0xffffff,
-            size: 0.2,
-            transparent: true,
-            opacity: 0.8,
-            blending: THREE.AdditiveBlending
+        // Open first card by default
+        document.addEventListener('DOMContentLoaded', () => {
+            const firstCard = document.querySelector('.card');
+            if (firstCard) {
+                firstCard.classList.add('active');
+                firstCard.querySelector('.card-header span').textContent = '-';
+            }
         });
-        
-        const particleSystem = new THREE.Points(particles, particleMaterial);
-        scene.add(particleSystem);
-        
-        // Добавляем центральную сферу
-        const sphereGeometry = new THREE.SphereGeometry(3, 32, 32);
-        const sphereMaterial = new THREE.MeshBasicMaterial({ 
-            color: 0xffffff,
-            wireframe: true
-        });
-        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-        scene.add(sphere);
-        
-        // Переменные для отслеживания мыши
-        let mouseX = 0;
-        let mouseY = 0;
-        
-        // Обработчик движения мыши
-        document.addEventListener('mousemove', (event) => {
-            mouseX = (event.clientX - window.innerWidth / 2) / 50;
-            mouseY = (event.clientY - window.innerHeight / 2) / 50;
-        });
-        
-        // Анимация
-        function animate() {
-            requestAnimationFrame(animate);
-            
-            // Вращение частиц и сферы
-            particleSystem.rotation.x += 0.0001;
-            particleSystem.rotation.y += 0.0002;
-            
-            sphere.rotation.x += 0.0005;
-            sphere.rotation.y += 0.0007;
-            
-            // Реакция на мышь
-            camera.position.x += (mouseX - camera.position.x) * 0.05;
-            camera.position.y += (-mouseY - camera.position.y) * 0.05;
-            camera.lookAt(scene.position);
-            
-            renderer.render(scene, camera);
-        }
-        
-        // Обработчик изменения размера окна
-        window.addEventListener('resize', () => {
-            camera.aspect = window.innerWidth / window.innerHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(window.innerWidth, window.innerHeight);
-        });
-        
-        animate();
     </script>
 </body>
 </html>
