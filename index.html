@@ -3,537 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Webyep - Designer</title>
-    <!-- Add favicon -->
-    <link rel="icon" type="image/png" href="lg.png">
-    
+    <title>Document</title>
     <style>
-        
-        @import url('https://fonts.googleapis.com/css2?family=Kosugi&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&display=swap');
 
-
-        
-        * {
+        body {
+            background-color: #000;
+            color: white;
+            font-family: "JetBrains Mono", monospace;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: "Roboto", serif;
-            font-optical-sizing: auto;
-            font-weight: <weight>;
-            font-style: normal;
-            font-variation-settings: "wdth" 100;
-        }
-
-        html, body {
-            height: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
             overflow: hidden;
-        }
-
-        /* Logo styling */
-        #logo {
-            position: absolute;
-            top: 10px;
-            left: 15px;
-            z-index: 1000;
-            width: 38px; /* Adjust size as needed */
-            height: 38px;
-        }
-
-        #load-button, #delete-button, #render-button {
-            position: absolute;
-            top: 10px;
-            z-index: 1000;
-            padding: 10px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        #load-button { left: 70px; } /* Adjust position to avoid overlapping with logo */
-        #delete-button { left: 160px; background-color: #dc3545; }
-        #delete-button:hover { background-color: #b52b3a; }
-        #render-button { left: 230px; background-color: #28a745; }
-        #render-button:hover { background-color: #218838; }
-        
-        #confirm-box {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: white;
-            padding: 20px;
-            border-radius: 10px;
-            display: none;
-            text-align: center;
+            position: relative;
         }
         
-        #confirm-box button {
-            margin: 10px;
-            padding: 10px 20px;
-            border: none;
-            cursor: pointer;
-            border-radius: 5px;
-        }
-        #confirm-yes { background-color: #dc3545; color: white; }
-        #confirm-no { background-color: #6c757d; color: white; }
-        #watermark {
-            position: absolute;
-            bottom: 10px;
-            left: 10px;
-            color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
-            font-size: 10px;
-            font-family: Arial, sans-serif;
-            opacity: 50%;
-        }
-        /* Стили для модального окна с change log */
-        #changelog-modal {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.9);
-            color: white;
+        #header {
             padding: 20px;
-            border-radius: 10px;
-            width: 400px;
-            max-width: 90%;
-            z-index: 1001;
-            display: none;
+            position: relative;
+            z-index: 10;
         }
-
-        #changelog-modal h2 {
-            margin-top: 0;
-            bottom: 20px;
-            font-size: 20px;
-        }
-
-        #changelog-modal h1 {
-            margin-top: 0;
-            bottom: 20px;
-            font-size: 15px;
-        }
-
-        #changelog-modal ul {
-            list-style-type: disc;
-            padding-left: 20px;
-        }
-
-        #changelog-modal button {
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #007bff;
+        
+        .text_button {
             color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            padding: 5px 0;
+            transition: color 0.2s ease;
         }
 
-        #changelog-modal button:hover {
-            background-color: #0056b3;
+        .text_button:hover {
+            color: #ccc;
+        }
+        
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        
+        .dropdown-content {
+            display: block;
+            position: absolute;
+            background-color: #000;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            border: 1px solid #333;
+            left: 0;
+            top: calc(100% + 10px);
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: 
+                opacity 0.25s ease,
+                transform 0.25s ease,
+                visibility 0.25s;
+            border-radius: 4px;
+            padding: 5px 0;
+        }
+        
+        .dropdown-content::before {
+            content: '';
+            display: block;
+            position: absolute;
+            top: -10px;
+            left: 0;
+            width: 100%;
+            height: 10px;
+        }
+        
+        .dropdown-content a {
+            color: white;
+            padding: 10px 16px;
+            text-decoration: none;
+            display: block;
+            transition: background-color 0.2s;
+            border-radius: 4px;
+        }
+        
+        .dropdown-content a:hover {
+            background-color: #222;
+        }
+        
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
         }
 
-        #context-menu {
-    display: none;
-    position: absolute;
-    background-color: rgb(41, 41, 41);
-    border: 1px solid rgb(41, 41, 41);
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-}
-
-#context-menu ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    background-color: rgb(41, 41, 41);
-    border: 1px solid rgb(41, 41, 41);
-    color: aqua;
-}
-
-#context-menu li {
-    padding: 8px 12px;
-    cursor: pointer;
-    
-}
-
-#context-menu li:hover {
-    background-color: #0c0c0c;
-}
+        .separator {
+            margin: 0 10px;
+            color: #333;
+            user-select: none;
+        }
+        
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
     </style>
 </head>
 <body>
-    <!-- Add logo -->
-    <a href="https://github.com/webyep-art/webyep-art.github.io">
-        <img id="logo" src="logo.png" alt="Logo">
-    </a>
-    <div id="context-menu" style="display: none; position: absolute; background-color: rgb(0, 0, 0); border: 1px solid #2e3135; box-shadow: 2px 2px 5px rgba(0,0,0,0.2); z-index: 1000;">
-        <ul style="list-style: none; margin: 0; padding: 0;">
-            <li id="delete-context" style="padding: 8px 12px; cursor: pointer;">Delete</li>
-            <li id="duplicate-context" style="padding: 8px 12px; cursor: pointer;">Duplicate</li>
-            <li id="select-object" style="padding: 8px 12px; cursor: pointer; display: none;">Select object first</li>
-        </ul>
+    <div id="header">
+        <a href="#" class="text_button">webyep</a>
+        <span class="separator">|</span>
+        <div class="dropdown">
+            <a href="#" class="text_button">projects</a>
+            <div class="dropdown-content">
+                <a href="luna.html">Luna</a>
+            </div>
+        </div>
     </div>
-    <button id="load-button">Load GLB</button>
-    <button id="delete-button">Delete</button>
-    <button id="render-button">Export</button>
     
-    <div id="confirm-box">
-        <p>Cannot be undone! Are you sure?</p>
-        <button id="confirm-yes">Yes</button>
-        <button id="confirm-no">No</button>
-    </div>
-    <div id="changelog-modal">
-        <h2>Alpha 0.0.2</h2>
-        <ul>
-            <li>The grid size has been increased.</li>
-            <li>Added conntext meny</li>
-            <li>Added outline to selected objects</li>
-            <li>Added source code link.</li>
-        </ul>
-        <h1>Dev notes</h1>
-        <ul>
-            <li>To improve the project, I plan to add advertising/donations in future versions. Don’t be afraid, most likely it will be one banner on the project creation page (sorry for the spoiler)</li>
-        </ul>
-        <button id="close-changelog">Close</button>
-    </div>
-
-    <div id="watermark">
-        Webyep Designer. Alpha 0.0.2. Dev's discord: webyep.
-        THE VERSION IS UNSTABLE AND NOT WORKING CORRECTLY. THE CODE REQUIRES IMPROVEMENTS AND REFACTORING
-    </div>
+    <div id="canvas-container"></div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/OrbitControls.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/loaders/GLTFLoader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/controls/TransformControls.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.7.1/jszip.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/postprocessing/EffectComposer.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/postprocessing/RenderPass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/postprocessing/OutlinePass.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/shaders/CopyShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/shaders/FXAAShader.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/three/examples/js/postprocessing/ShaderPass.js"></script>
-
     <script>
-        // Показываем модальное окно с change log при загрузке страницы
-        document.addEventListener('DOMContentLoaded', () => {
-            const changelogModal = document.getElementById('changelog-modal');
-            changelogModal.style.display = 'block';
-
-            // Закрываем модальное окно при нажатии на кнопку
-            document.getElementById('close-changelog').addEventListener('click', () => {
-                changelogModal.style.display = 'none';
-            });
-        });
-
-        const renderer = new THREE.WebGLRenderer({ antialias: true });
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        document.body.appendChild(renderer.domElement);
-        renderer.setClearColor(0x1a1a1a, 1);
-        // Добавляем OutlinePass для обводки выделенного объекта
-      
-        // Ensure the body and canvas fill the entire screen
-        document.body.style.margin = '0';
-        document.body.style.overflow = 'hidden';
-
+        // Инициализация Three.js сцены
+        const container = document.getElementById('canvas-container');
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 1, 10000);
-        camera.position.set(0, 20, 100);
-        const composer = new THREE.EffectComposer(renderer);
-        const renderPass = new THREE.RenderPass(scene, camera);
-        composer.addPass(renderPass);
-
-        const outlinePass = new THREE.OutlinePass(
-            new THREE.Vector2(window.innerWidth, window.innerHeight),
-            scene,
-            camera
-        );
-        outlinePass.edgeStrength = 3.0; // Сила обводки
-        outlinePass.edgeGlow = 0.5;     // Свечение обводки
-        outlinePass.edgeThickness = 1.0; // Толщина обводки
-        outlinePass.pulsePeriod = 2;    // Период пульсации (если нужно)
-        outlinePass.visibleEdgeColor.set(0x00ff00); // Цвет обводки (зеленый)
-        outlinePass.hiddenEdgeColor.set(0x000000);  // Цвет скрытых краев
-
-composer.addPass(outlinePass);
-        const orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         
-        const transformControls = new THREE.TransformControls(camera, renderer.domElement);
-        scene.add(transformControls);
-
-        transformControls.addEventListener('dragging-changed', (event) => {
-            orbitControls.enabled = !event.value;
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setClearColor(0x000000, 0);
+        container.appendChild(renderer.domElement);
+        
+        // Позиция камеры
+        camera.position.z = 30;
+        
+        // Создаем частицы
+        const particleCount = 2000;
+        const particles = new THREE.BufferGeometry();
+        const positions = new Float32Array(particleCount * 3);
+        const sizes = new Float32Array(particleCount);
+        
+        for (let i = 0; i < particleCount; i++) {
+            const i3 = i * 3;
+            positions[i3] = (Math.random() - 0.5) * 100;
+            positions[i3 + 1] = (Math.random() - 0.5) * 100;
+            positions[i3 + 2] = (Math.random() - 0.5) * 100;
+            
+            sizes[i] = Math.random() * 0.5 + 0.5;
+        }
+        
+        particles.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        particles.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+        
+        // Материал частиц
+        const particleMaterial = new THREE.PointsMaterial({
+            color: 0xffffff,
+            size: 0.2,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending
         });
-
+        
+        const particleSystem = new THREE.Points(particles, particleMaterial);
+        scene.add(particleSystem);
+        
+        // Добавляем центральную сферу
+        const sphereGeometry = new THREE.SphereGeometry(3, 32, 32);
+        const sphereMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xffffff,
+            wireframe: true
+        });
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        scene.add(sphere);
+        
+        // Переменные для отслеживания мыши
+        let mouseX = 0;
+        let mouseY = 0;
+        
+        // Обработчик движения мыши
+        document.addEventListener('mousemove', (event) => {
+            mouseX = (event.clientX - window.innerWidth / 2) / 50;
+            mouseY = (event.clientY - window.innerHeight / 2) / 50;
+        });
+        
+        // Анимация
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            // Вращение частиц и сферы
+            particleSystem.rotation.x += 0.0001;
+            particleSystem.rotation.y += 0.0002;
+            
+            sphere.rotation.x += 0.0005;
+            sphere.rotation.y += 0.0007;
+            
+            // Реакция на мышь
+            camera.position.x += (mouseX - camera.position.x) * 0.05;
+            camera.position.y += (-mouseY - camera.position.y) * 0.05;
+            camera.lookAt(scene.position);
+            
+            renderer.render(scene, camera);
+        }
+        
+        // Обработчик изменения размера окна
         window.addEventListener('resize', () => {
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
         });
-
-        // Add Grid Helper
-        const gridSize = 5000;
-        const gridDivisions = 1000;
-        const gridHelper = new THREE.GridHelper(gridSize, gridDivisions, 0x888888, 0x444444);
-        gridHelper.position.y = -0.01; // Slightly below the origin to avoid z-fighting
-        scene.add(gridHelper);
-
-        const ambientLight = new THREE.AmbientLight(0x404040, 1);
-        scene.add(ambientLight);
-
-        const directionalLight = new THREE.DirectionalLight(0xffffff, 2);
-        directionalLight.position.set(10, 10, -10);
-        directionalLight.castShadow = true;
-        scene.add(directionalLight);
-
-        const gltfLoader = new THREE.GLTFLoader();
-        let selectedObject = null;
-        let loadedModels = [];
-
-        function updateMaterials(object) {
-            object.traverse((child) => {
-                if (child.isMesh) {
-                    child.material = new THREE.MeshStandardMaterial({
-                        map: child.material.map || null,
-                        color: child.material.color || new THREE.Color(1, 1, 1),
-                        metalness: 0.3,
-                        roughness: 0.7
-                    });
-                }
-            });
-        }
-
-        document.getElementById('load-button').addEventListener('click', () => {
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.glb';
-            input.onchange = (event) => {
-                const file = event.target.files[0];
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        gltfLoader.parse(e.target.result, '', (gltf) => {
-                            const model = gltf.scene;
-                            model.userData.selectable = true;
-                            model.userData.fileName = file.name.replace('.glb', ''); // Store the file name
-                            updateMaterials(model);
-                            scene.add(model);
-                            loadedModels.push(model);
-                        });
-                    };
-                    reader.readAsArrayBuffer(file);
-                }
-            };
-            input.click();
-        });
-
-        document.getElementById('delete-button').addEventListener('click', () => {
-            if (selectedObject) {
-                document.getElementById('confirm-box').style.display = 'block';
-            }
-        });
-
-        document.getElementById('confirm-yes').addEventListener('click', () => {
-            if (selectedObject) {
-                scene.remove(selectedObject);
-                selectedObject = null;
-                transformControls.detach();
-            }
-            document.getElementById('confirm-box').style.display = 'none';
-        });
-
-        document.getElementById('confirm-no').addEventListener('click', () => {
-            document.getElementById('confirm-box').style.display = 'none';
-        });
-
-        window.addEventListener('click', (event) => {
-            const mouse = new THREE.Vector2();
-            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-            const raycaster = new THREE.Raycaster();
-            raycaster.setFromCamera(mouse, camera);
-            const intersects = raycaster.intersectObjects(scene.children, true);
-
-            for (let intersect of intersects) {
-                let object = intersect.object;
-                while (object.parent && !object.userData.selectable) {
-                    object = object.parent;
-                }
-                if (object.userData.selectable) {
-                    selectedObject = object;
-                    transformControls.attach(selectedObject);
-
-                    // Обновляем обводку для выделенного объекта
-                    outlinePass.selectedObjects = [selectedObject];
-                    break;
-                }
-            }
-        });
-
-        // Add keybinding for transform modes
-        window.addEventListener('keydown', (event) => {
-            if (selectedObject) {
-                switch (event.key) {
-                    case 'Q':
-                        transformControls.setMode('translate');
-                        break;
-                    case 'W':
-                        transformControls.setMode('rotate');
-                        break;
-                    case 'E':
-                        transformControls.setMode('scale');
-                        break;
-                    case 'R':
-                        transformControls.setMode('none');
-                        transformControls.detach(); // Detach transform controls to reset
-                        break;
-                    default:
-                        break;
-                }
-            }
-        });
-
-        // Render button functionality
-        document.getElementById('render-button').addEventListener('click', () => {
-            const zip = new JSZip();
-            const code = [];
-
-            loadedModels.forEach((model, index) => {
-                const fileName = model.userData.fileName || `model_${index + 1}`;
-                const glbName = `${fileName}_glb`;
-
-                // Compute bounding box dimensions
-                const box = new THREE.Box3().setFromObject(model);
-                const size = box.getSize(new THREE.Vector3());
-
-                // Get the width, height, and depth
-                const width = size.x;
-                const height = size.y;
-                const depth = size.z;
-
-                // Add GLB file to ZIP
-                const glbFile = new Blob([model.userData.glbData], { type: 'model/gltf-binary' });
-                zip.file(`${fileName}.glb`, glbFile);
-
-                // Generate JS code using dimensions (width, height, depth)
-                code.push(`var ${glbName} = runtimeScene.createObject('${fileName}_glb');`);
-                code.push(`${glbName}.get3DRendererObject().rotation.x = ${model.rotation.x};`);
-                code.push(`${glbName}.get3DRendererObject().rotation.y = ${model.rotation.z};`);
-                code.push(`${glbName}.get3DRendererObject().rotation.z = ${model.rotation.y};`);
-                code.push(`${glbName}.get3DRendererObject().position.x = ${model.position.x};`);
-                code.push(`${glbName}.get3DRendererObject().position.y = ${model.position.y};`);
-                code.push(`${glbName}.get3DRendererObject().position.z = ${model.position.z};`);
-
-                // Use the actual width, height, and depth (instead of scale)
-                code.push(`${glbName}.get3DRendererObject().scale.x = ${width} * 2;`);
-                code.push(`${glbName}.get3DRendererObject().scale.y = ${height} * 2;`);
-                code.push(`${glbName}.get3DRendererObject().scale.z = ${depth} * 2;`);
-                code.push('');
-            });
-
-            // Add JS code file to ZIP
-            zip.file('scene.js', code.join('\n'));
-
-            // Generate and download the ZIP file
-            zip.generateAsync({ type: 'blob' }).then((content) => {
-                saveAs(content, 'scene.zip');
-            });
-        });
-        // Элемент контекстного меню
-const contextMenu = document.getElementById('context-menu');
-const deleteContext = document.getElementById('delete-context');
-const duplicateContext = document.getElementById('duplicate-context');
-const selectObjectContext = document.getElementById('select-object');
-
-// Переменная для хранения выбранного объекта
-let contextMenuObject = null;
-
-// Обработчик правого клика
-window.addEventListener('contextmenu', (event) => {
-    event.preventDefault(); // Отключаем стандартное контекстное меню браузера
-
-    const mouse = new THREE.Vector2();
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-
-    const raycaster = new THREE.Raycaster();
-    raycaster.setFromCamera(mouse, camera);
-    const intersects = raycaster.intersectObjects(scene.children, true);
-
-    // Проверяем, есть ли пересечение с объектом
-    let object = null;
-    for (let intersect of intersects) {
-        let obj = intersect.object;
-        while (obj.parent && !obj.userData.selectable) {
-            obj = obj.parent;
-        }
-        if (obj.userData.selectable) {
-            object = obj;
-            break;
-        }
-    }
-
-    if (object) {
-        // Если объект выбран, показываем меню с пунктами Delete и Duplicate
-        contextMenuObject = object;
-        deleteContext.style.display = 'block';
-        duplicateContext.style.display = 'block';
-        selectObjectContext.style.display = 'none';
-    } else {
-        // Если объект не выбран, показываем сообщение "Select object first"
-        contextMenuObject = null;
-        deleteContext.style.display = 'none';
-        duplicateContext.style.display = 'none';
-        selectObjectContext.style.display = 'block';
-    }
-
-    // Позиционируем контекстное меню
-    contextMenu.style.display = 'block';
-    contextMenu.style.left = `${event.clientX}px`;
-    contextMenu.style.top = `${event.clientY}px`;
-});
-
-// Закрытие контекстного меню при клике вне его
-window.addEventListener('click', () => {
-    contextMenu.style.display = 'none';
-});
-
-// Обработка пункта Delete
-deleteContext.addEventListener('click', () => {
-    if (contextMenuObject) {
-        // Если удаляемый объект прикреплен к TransformControls, отключаем их
-        if (transformControls.object === contextMenuObject) {
-            transformControls.detach();
-        }
-        scene.remove(contextMenuObject);
-        contextMenuObject = null;
-        contextMenu.style.display = 'none';
-
-        // Сбрасываем обводку
-        outlinePass.selectedObjects = [];
-    }
-});
-
-// Обработка пункта Duplicate
-duplicateContext.addEventListener('click', () => {
-    if (contextMenuObject) {
-        const clone = contextMenuObject.clone();
-        clone.position.x += contextMenuObject.scale.x * 2; // Сдвигаем копию на ширину объекта
-        scene.add(clone);
-        loadedModels.push(clone);
-        contextMenu.style.display = 'none';
-    }
-});
-function animate() {
-    requestAnimationFrame(animate);
-    orbitControls.update();
-    composer.render(); // Используем composer вместо renderer
-}
-
+        
         animate();
     </script>
 </body>
