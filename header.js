@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     <a href="luna.html">Luna</a>
                     <a href="pygame3d.html">Pygame 3D</a>
                     <a href="sorty.html">Sorty</a>
+                    <a href="#">test</a>
                 </div>
             </div>
         </div>
@@ -23,4 +24,5 @@ document.addEventListener('DOMContentLoaded', function() {
     if (oldHeader && oldHeader !== document.getElementById('header')) {
         oldHeader.remove();
     }
+
 });
