@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Резюме | Артем Свитлов</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Inter:wght@300;400;500;600;700&display=swap');
+        
+        :root {
+            --bg-color: #0a0a0a;
+            --text-color: #e0e0e0;
+            --primary-color: #00cc88;
+            --secondary-color: #333333;
+            --card-bg: #111111;
+            --border-color: #252525;
+        }
+        
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 20px;
+        }
+        
+        .header-text h1 {
+            font-size: 2.5rem;
+            margin: 0;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+        
+        .header-text p {
+            margin: 5px 0 0;
+            color: #999;
+            font-size: 1.1rem;
+        }
+        
+        .language-switcher {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .language-btn {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 5px 15px;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+        }
+        
+        .language-btn.active {
+            background-color: var(--primary-color);
+            color: #000;
+            border-color: var(--primary-color);
+        }
+        
+        .language-btn:hover {
+            border-color: var(--primary-color);
+        }
+        
+        section {
+            margin-bottom: 40px;
+        }
+        
+        h2 {
+            color: var(--primary-color);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            font-weight: 600;
+        }
+        
+        .card {
+            background-color: var(--card-bg);
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 20px;
+            border: 1px solid var(--border-color);
+        }
+        
+        .card h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.3rem;
+        }
+        
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+        }
+        
+        .skill-item {
+            background-color: rgba(0, 204, 136, 0.1);
+            border: 1px solid rgba(0, 204, 136, 0.3);
+            border-radius: 6px;
+            padding: 12px 15px;
+        }
+        
+        .skill-item h4 {
+            margin: 0 0 5px 0;
+            color: var(--primary-color);
+        }
+        
+        .projects-list {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .project-item {
+            display: flex;
+            gap: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .project-item:last-child {
+            border-bottom: none;
+        }
+        
+        .project-content h4 {
+            margin: 0 0 5px 0;
+            font-size: 1.2rem;
+        }
+        
+        .project-content p {
+            margin: 0;
+            color: #999;
+        }
+        
+        .code-block {
+            background-color: #000;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            padding: 15px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: "JetBrains Mono", monospace;
+            font-size: 0.9rem;
+        }
+        
+        .keyword {
+            color: #569cd6;
+        }
+        
+        .type {
+            color: #4ec9b0;
+        }
+        
+        .string {
+            color: #ce9178;
+        }
+        
+        .number {
+            color: #b5cea8;
+        }
+        
+        .comment {
+            color: #6a9955;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-item {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-text">
+                <h1 class="lang-ru">Артем Свитлов</h1>
+                <h1 class="lang-en" style="display: none;">Artem Svitlov</h1>
+                <p class="lang-ru">Разработчик / QA инженер</p>
+                <p class="lang-en" style="display: none;">Developer / QA Engineer</p>
+            </div>
+            <div class="language-switcher">
+                <button class="language-btn active" onclick="switchLanguage('ru')">RU</button>
+                <button class="language-btn" onclick="switchLanguage('en')">EN</button>
+            </div>
+        </header>
+        
+        <section id="about" class="lang-ru">
+            <h2>Обо мне</h2>
+            <div class="card">
+                <p>Меня зовут Артем Свитлов, мне 17 лет. Я начинающий разработчик с фокусом на Python и QA тестирование.</p>
+                <p>Мой главный навык - умение работать с документацией и быстро осваивать новые технологии. Я считаю, что программирование - это в первую очередь понимание алгоритмов и архитектуры, а синтаксис конкретного языка можно изучить за неделю.</p>
+            </div>
+        </section>
+        
+        <section id="about" class="lang-en" style="display: none;">
+            <h2>About Me</h2>
+            <div class="card">
+                <p>My name is Artem Svitlov, I'm 17 years old. I'm a beginner developer with focus on Python and QA testing.</p>
+                <p>My main skill is the ability to work with documentation and quickly learn new technologies. I believe that programming is primarily about understanding algorithms and architecture, while the syntax of a particular language can be learned in a week.</p>
+            </div>
+        </section>
+        
+        <section id="skills" class="lang-ru">
+            <h2>Навыки</h2>
+            <div class="card">
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <h4>Языки программирования</h4>
+                        <p>Python (основной), C, C#, C++ (базовые знания)</p>
+                    </div>
+                    <div class="skill-item">
+                        <h4>QA Тестирование</h4>
+                        <p>QASE, понимание принципов тестирования, построение пайплайнов</p>
+                    </div>
+                    <div class="skill-item">
+                        <h4>Работа с документацией</h4>
+                        <p>Чтение и применение документации на русском и английском</p>
+                    </div>
+                    <div class="skill-item">
+                        <h4>Разработка</h4>
+                        <p>Алгоритмы, проектирование, решение задач</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="skills" class="lang-en" style="display: none;">
+            <h2>Skills</h2>
+            <div class="card">
+                <div class="skills-grid">
+                    <div class="skill-item">
+                        <h4>Programming Languages</h4>
+                        <p>Python (main), C, C#, C++ (basic knowledge)</p>
+                    </div>
+                    <div class="skill-item">
+                        <h4>QA Testing</h4>
+                        <p>QASE, understanding of testing principles, pipeline building</p>
+                    </div>
+                    <div class="skill-item">
+                        <h4>Documentation</h4>
+                        <p>Reading and applying documentation in Russian and English</p>
+                    </div>
+                    <div class="skill-item">
+                        <h4>Development</h4>
+                        <p>Algorithms, design, problem solving</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="philosophy" class="lang-ru">
+            <h2>Подход к программированию</h2>
+            <div class="card">
+                <h3>Языки - это инструменты</h3>
+                <p>Я не ограничиваю себя одним языком. Вот пример того, как я вижу решение задачи на разных языках:</p>
+                
+                <div class="code-block">
+                    <span class="comment"># Python - просто и читаемо</span><br>
+                    <span class="keyword">def</span> <span class="type">factorial</span>(n):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="number">1</span> <span class="keyword">if</span> n == <span class="number">0</span> <span class="keyword">else</span> n * factorial(n-<span class="number">1</span>)<br>
+                    <br>
+                    <span class="comment">// C - эффективно и близко к железу</span><br>
+                    <span class="type">int</span> <span class="type">factorial</span>(<span class="type">int</span> n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> n == <span class="number">0</span> ? <span class="number">1</span> : n * factorial(n-<span class="number">1</span>);<br>
+                    }<br>
+                </div>
+                
+                <p>Разные языки - разные подходы, но суть алгоритма остается той же. Главное - понимать принципы, а не синтаксис.</p>
+            </div>
+        </section>
+        
+        <section id="philosophy" class="lang-en" style="display: none;">
+            <h2>Programming Philosophy</h2>
+            <div class="card">
+                <h3>Languages are tools</h3>
+                <p>I don't limit myself to one language. Here's an example of how I see problem solving in different languages:</p>
+                
+                <div class="code-block">
+                    <span class="comment"># Python - simple and readable</span><br>
+                    <span class="keyword">def</span> <span class="type">factorial</span>(n):<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> <span class="number">1</span> <span class="keyword">if</span> n == <span class="number">0</span> <span class="keyword">else</span> n * factorial(n-<span class="number">1</span>)<br>
+                    <br>
+                    <span class="comment">// C - efficient and close to hardware</span><br>
+                    <span class="type">int</span> <span class="type">factorial</span>(<span class="type">int</span> n) {<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;<span class="keyword">return</span> n == <span class="number">0</span> ? <span class="number">1</span> : n * factorial(n-<span class="number">1</span>);<br>
+                    }<br>
+                </div>
+                
+                <p>Different languages - different approaches, but the essence of the algorithm remains the same. The main thing is to understand the principles, not the syntax.</p>
+            </div>
+        </section>
+        
+ <section id="projects" class="lang-ru">
+            <h2>Проекты</h2>
+            <div class="card">
+                <div class="projects-list">
+                    <div class="project-item">
+                        <div class="project-content">
+                            <p>Вы можете ознакомиться с моими проектами на моем GitHub и личном сайте:</p>
+                            <p>GitHub: <a href="https://github.com/nosfty" target="_blank" style="color: var(--primary-color);">github.com/nosfty</a></p>
+                            <p>Личный сайт: <a href="https://webyep-art.github.io/" target="_blank" style="color: var(--primary-color);">webyep-art.github.io</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="projects" class="lang-en" style="display: none;">
+            <h2>Projects</h2>
+            <div class="card">
+                <div class="projects-list">
+                    <div class="project-item">
+                        <div class="project-content">
+                            <p>You can check out my projects on my GitHub and personal website:</p>
+                            <p>GitHub: <a href="https://github.com/nosfty" target="_blank" style="color: var(--primary-color);">github.com/nosfty</a></p>
+                            <p>Personal website: <a href="https://webyep-art.github.io/" target="_blank" style="color: var(--primary-color);">webyep-art.github.io</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contact" class="lang-ru">
+            <h2>Контакты</h2>
+            <div class="card">
+                <p>Свяжитесь со мной для обсуждения возможностей сотрудничества:</p>
+                <p>Email: <a href="mailto:toomadzaki@gmail.com" style="color: var(--primary-color);">toomadzaki@gmail.com</a></p>
+                <p>GitHub: <a href="https://github.com/nosfty" target="_blank" style="color: var(--primary-color);">github.com/nosfty</a></p>
+            </div>
+        </section>
+        
+        <section id="contact" class="lang-en" style="display: none;">
+            <h2>Contact</h2>
+            <div class="card">
+                <p>Contact me to discuss collaboration opportunities:</p>
+                <p>Email: <a href="mailto:toomadzaki@gmail.com" style="color: var(--primary-color);">toomadzaki@gmail.com</a></p>
+                <p>GitHub: <a href="https://github.com/nosfty" target="_blank" style="color: var(--primary-color);">github.com/nosfty</a></p>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        function switchLanguage(lang) {
+            // Hide all language sections
+            document.querySelectorAll('.lang-ru, .lang-en').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Show selected language
+            document.querySelectorAll(`.lang-${lang}`).forEach(el => {
+                el.style.display = 'block';
+            });
+            
+            // Update button states
+            document.querySelectorAll('.language-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            document.querySelector(`.language-btn[onclick="switchLanguage('${lang}')"]`).classList.add('active');
+        }
+        
+        // Initialize with Russian
+        document.addEventListener('DOMContentLoaded', () => {
+            switchLanguage('ru');
+        });
+    </script>
+</body>
+</html>
